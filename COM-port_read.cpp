@@ -6,22 +6,21 @@
 #include <termios.h> /* Объявления управления POSIX-терминалом */
 #include <fstream>   /* Объявление функции записи*/
 #include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
 #include <ctime>
  using namespace std;
  
 int fd; /* Файловый дескриптор для порта */
 char buf[10]={0};/*размер зависит от размера строки принимаемых данных*/ 
 int iIn;
-FILE* f;
+FILE* f, *q;
 
 int open_port(void);
 int main(void) { 
   
   port_set:
-    fd = open("/dev/ttyACM6", O_RDWR | O_NOCTTY | O_NDELAY); /*'open_port()' - Открывает последовательный порт */
+    fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY); /*'open_port()' - Открывает последовательный порт */
       if (fd == -1)
         {
           /*  * Возвращает файловый дескриптор при успехе или -1 при ошибке. */
@@ -44,17 +43,21 @@ int main(void) {
         
         }
  
+	time_t seconds = time(NULL);
+	tm* timeinfo = localtime(&seconds);
+	f = fopen("/home/serg/port.txt", "at");
+	fprintf (f, "%s", asctime(timeinfo));
+	fclose(f); 
+ 	
  read_port:
- 
- 	iIn=read(fd,buf,10); /*чтения приходящих данных из порта*/
 
+	iIn=read(fd,buf,10); /*чтения приходящих данных из порта*/
 	f = fopen("/home/serg/port.txt", "at"); // окрываем файл для записи
  	fprintf (f, "%s", buf);
-	//usleep(10000);
 	cout<<buf;
 	fclose(f); 
 
 goto read_port;
-	
+
     return 0;
 }
