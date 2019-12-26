@@ -122,9 +122,11 @@ int main(void)
   unsigned int freqTIM5Before=0;
   unsigned int freqTIM5After=0;
   unsigned int freqTIM5PerSecond=0;
+
   unsigned int GENcount=0;
-  short x1=0, x2=0, x3=0, x4=0;
-  unsigned int y=0, y1=0, y2=0, y3=0, y4=0, y5=0;
+  short x=0, x1=0, x2=0, x3=0, x4=0;
+  unsigned int y=0, y1=0, y2=0, y3=0, y4=0 /*,y5=0*/;
+
   while (1)
   {
 		freqTIM2After=TIM2->CNT;
@@ -144,16 +146,22 @@ int main(void)
 	      I2C2->SR1;
 	      I2C2->SR2;
 	    }*/
-	    y=TIM2->CNT;
-	    x4 = y&0x000000FF;
-	    x3 = (y&0x0000FF00) >> 8;
-	    x2 = (y&0x00FF0000) >> 16;
-	    x1 = (y&0xFF000000) >> 24;
-	   y1 = x1<<24;
+	    x=freqTIM2PerSecond;
+	    x4 = x&0x000000FF;
+	    x3 = (x&0x0000FF00) >> 8;
+	    x2 = (x&0x00FF0000) >> 16;
+	    x1 = (x&0xFF000000) >> 24;
+
+	    y=freqTIM5PerSecond;
+	   	y4 = y&0x000000FF;
+	   	y3 = (y&0x0000FF00) >> 8;
+	   	y2 = (y&0x00FF0000) >> 16;
+	   	y1 = (y&0xFF000000) >> 24;
+	 /*  y1 = x1<<24;
 	   y2 = x2<<16;
 	   y3 = x3<<8;
 	   y4 =x4;
-	   y5= y4+y3+y2+y1;
+	   y5= y4+y3+y2+y1;*/
 
 	   I2C2->DR = x1; //data1
 	   while (!(I2C2->SR1 & I2C_SR1_TXE)){}; //ev3
@@ -166,6 +174,18 @@ int main(void)
 	   I2C2->CR1		|=I2C_CR1_ACK;
 	   I2C2->DR = x4; //data4
 	   while (!(I2C2->SR1 & I2C_SR1_TXE)){};  //ev3
+	   I2C2->CR1		|=I2C_CR1_ACK;
+	   I2C2->DR = y1; //data5
+	   while (!(I2C2->SR1 & I2C_SR1_TXE)){};  //ev3
+	   I2C2->CR1		|=I2C_CR1_ACK;
+	   I2C2->DR = y2; //data6
+	   while (!(I2C2->SR1 & I2C_SR1_TXE)){};  //ev3
+	   I2C2->CR1		|=I2C_CR1_ACK;
+	   I2C2->DR = y3; //data7
+	   while (!(I2C2->SR1 & I2C_SR1_TXE)){};  //ev3
+	   I2C2->CR1		|=I2C_CR1_ACK;
+	   I2C2->DR = y4; //data8
+	   while (!(I2C2->SR1 & I2C_SR1_TXE)){};  //ev3
 
 	    //while ((I2C1->SR1 & I2C_SR1_TXE) == I2C_SR1_TXE){
 
@@ -173,9 +193,9 @@ int main(void)
 
 	    //while ((I2C1->SR1 & I2C_SR1_TXE) == I2C_SR1_TXE){};
 
-	    sprintf(TIM2CNTBUF, "%u \t \%x \t %u  \t %u  \t %u  \t %u  \t %u  \t %u \r\n", GENcount, (unsigned int)I2C2->OAR1,(unsigned int)(y1), (unsigned int)(y2), (unsigned int)(y3), (unsigned int)(y4),  (unsigned int)(y5), (unsigned int)TIM2->CNT);
-	    CDC_Transmit_FS((uint8_t *)TIM2CNTBUF, 80);
-y1=0; y=0; y2=0; y3 =0; y4=0; y5=0;
+//	    sprintf(TIM2CNTBUF, "%u \t \%x \t %u  \t %u  \t %u  \t %u  \t %u  \t %u \r\n", GENcount, (unsigned int)I2C2->OAR1,(unsigned int)(y1), (unsigned int)(y2), (unsigned int)(y3), (unsigned int)(y4),  (unsigned int)(y5), (unsigned int)TIM2->CNT);
+	   sprintf(TIM2CNTBUF, "%u \t %u \t %u \r\n", GENcount, freqTIM2PerSecond, freqTIM5PerSecond);
+	   CDC_Transmit_FS((uint8_t *)TIM2CNTBUF, 80);
 	    freqTIM2Before=freqTIM2After;
 	    freqTIM5Before=freqTIM5After;
 
