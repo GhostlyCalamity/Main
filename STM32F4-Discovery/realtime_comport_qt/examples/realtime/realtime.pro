@@ -16,7 +16,8 @@ HEADERS = \
     scrollzoomer.h \
     scrollbar.h \
     incrementalplot.h \
-    randomplot.h
+    randomplot.h \
+    function.h
 
 SOURCES = \
     main.cpp \
@@ -24,5 +25,6 @@ SOURCES = \
     scrollzoomer.cpp \
     scrollbar.cpp \
     incrementalplot.cpp \
-    randomplot.cpp
+    randomplot.cpp \
+    function.cpp
 

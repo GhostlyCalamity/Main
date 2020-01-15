@@ -28,6 +28,7 @@ private:
 private:
     Counter *d_randomCount;
     Counter *d_timerCount;
+    Counter *d_size;
     QCheckBox *d_symbolType;
     QAction *d_startAction;
     QAction *d_clearAction;

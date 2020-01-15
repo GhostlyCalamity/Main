@@ -111,11 +111,11 @@ void IncrementalPlot::showSymbols( bool on )
     {
         d_curve->setStyle( QwtPlotCurve::NoCurve );
         d_curve->setSymbol( new QwtSymbol( QwtSymbol::XCross,
-            Qt::NoBrush, QPen( Qt::white ), QSize( 4, 4 ) ) );
+            Qt::NoBrush, QPen( Qt::black ), QSize( 1, 1 ) ) );
     }
     else
     {
-        d_curve->setPen( Qt::white );
+        d_curve->setPen( Qt::blue);
         d_curve->setStyle( QwtPlotCurve::Dots );
         d_curve->setSymbol( NULL );
     }

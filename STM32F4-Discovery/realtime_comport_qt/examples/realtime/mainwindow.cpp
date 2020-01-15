@@ -74,7 +74,7 @@ MainWindow::MainWindow()
     connect( d_symbolType, SIGNAL( toggled( bool ) ), d_plot, SLOT( showSymbols( bool ) ) );
     connect( d_plot, SIGNAL( running( bool ) ), this, SLOT( showRunning( bool ) ) );
     connect( d_plot, SIGNAL( elapsed( int ) ), this, SLOT( showElapsed( int ) ) );
-
+    connect( d_plot, SIGNAL( elapsed( int ) ), this, SLOT( showElapsed( int ) ) );
     initWhatsThis();
 
     setContextMenuPolicy( Qt::NoContextMenu );
@@ -110,6 +110,9 @@ QToolBar *MainWindow::toolBar()
     d_timerCount = new Counter( hBox, "Delay", "ms", 0, 100000, 100 );
     d_timerCount->setValue( 0 );
 
+    d_size = new Counter( hBox, "xmax", "s", 1, 1000000, 100);
+    d_size -> setValue(10000);
+
     QHBoxLayout *layout = new QHBoxLayout( hBox );
     layout->setMargin( 0 );
     layout->setSpacing( 0 );
@@ -120,6 +123,8 @@ QToolBar *MainWindow::toolBar()
     layout->addWidget( d_randomCount );
     layout->addSpacing( 5 );
     layout->addWidget( d_timerCount );
+    layout->addSpacing( 5 );
+    layout->addWidget( d_size);
 
     showRunning( false );
 
@@ -132,7 +137,7 @@ void MainWindow::appendPoints( bool on )
 {
     if ( on )
         d_plot->append( d_timerCount->value(),
-                        d_randomCount->value() );
+                        d_randomCount->value());
     else
         d_plot->stop();
 }
@@ -149,7 +154,7 @@ void MainWindow::showElapsed( int ms )
 {
     QString text;
     text.setNum( ms );
-    text += " ms";
+    text += "ms";
 
     statusBar()->showMessage( text );
 }

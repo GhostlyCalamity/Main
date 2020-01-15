@@ -7,9 +7,11 @@
 #include <qwt_scale_draw.h>
 #include "scrollzoomer.h"
 #include "randomplot.h"
+#include "mainwindow.h"
+#include "function.h"
 
-const unsigned int c_rangeMax = 1000;
-
+//const unsigned int c_rangeMax = 1000;
+ int c_rangeMax=1000;
 class Zoomer: public ScrollZoomer
 {
 public:
@@ -38,7 +40,7 @@ public:
         QwtScaleDraw *sd = scaleWidget->scaleDraw();
 
         double minExtent = 0.0;
-        if ( zoomRectIndex() > 0 )
+      //  if ( zoomRectIndex() > 0 )
         {
             // When scrolling in vertical direction
             // the plot is jumping in horizontal direction
@@ -47,7 +49,7 @@ public:
 
             minExtent = sd->spacing() + sd->maxTickLength() + 1;
             minExtent += sd->labelSize(
-                scaleWidget->font(), c_rangeMax ).width();
+                scaleWidget->font(), ::c_rangeMax).width();
         }
 
         sd->setMinimumExtent( minExtent );
@@ -70,10 +72,10 @@ RandomPlot::RandomPlot( QWidget *parent ):
     grid->setMajorPen( Qt::gray, 0, Qt::DotLine );
     grid->attach( this );
 
-    setCanvasBackground( QColor( 29, 100, 141 ) ); // nice blue
+    setCanvasBackground(QColor(255,255,255)); //29, 100, 141 ) ); // nice blue
 
-    setAxisScale( xBottom, 0, c_rangeMax );
-    setAxisScale( yLeft, 0, c_rangeMax );
+    setAxisScale( xBottom, 0, ::c_rangeMax );
+    setAxisScale( yLeft, 0, ::c_rangeMax );
 
     replot();
 
@@ -86,20 +88,38 @@ QSize RandomPlot::sizeHint() const
 {
     return QSize( 540, 400 );
 }
+void func(int i)
+{
+    int x[1000];
+    for (i=0;i<500;i++)
+    {
+    x[i]=i;
+    }
+}
 
 void RandomPlot::appendPoint()
 {
-    double x = qrand() % c_rangeMax;
+   /* double x = qrand() % c_rangeMax;
     x += ( qrand() % 100 ) / 100;
 
     double y = qrand() % c_rangeMax;
     y += ( qrand() % 100 ) / 100;
+*/
+    //^^^^^^^^^^^^
+/*for(int i=0;i<1500;i++){
+   int x=0;
+   x+=i;
+  int y=0.5*x;*/
 
-    IncrementalPlot::appendPoint( QPointF( x, y ) );
-
+//-----------------
+    for(int z=0;z<1500;z++){
+  IncrementalPlot::appendPoint( QPointF( z, realtimefunction(z) ) );
+    QColor appendPoint( Qt::black);
     if ( --d_timerCount <= 0 )
         stop();
+    }
 }
+
 
 void RandomPlot::append( int timeout, int count )
 {
